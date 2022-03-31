@@ -16,17 +16,20 @@ class GameViewController: UIViewController {
     var timer = Timer()
     var time = 0.0
     
+    @IBOutlet weak var resetOutlet: UIButton!
     @IBOutlet weak var timerLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
         let value = UIInterfaceOrientation.landscapeLeft.rawValue
             UIDevice.current.setValue(value, forKey: "orientation")
+        resetOutlet.isHidden = true
         timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true){ tempTimer in
             self.time += 0.01
             self.time = round(self.time * 100.0)/100.0
             self.timerLabel.text = "\(self.time)"
             if self.play.hit{
                 self.timer.invalidate()
+                self.resetOutlet.isHidden = false
             }
         }
        
@@ -81,4 +84,22 @@ class GameViewController: UIViewController {
     }
     
     
+    @IBAction func resetAction(_ sender: UIButton) {
+        time = 0
+        play.hit = false
+        timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true){ tempTimer in
+            self.time += 0.01
+            self.time = round(self.time * 100.0)/100.0
+            self.timerLabel.text = "\(self.time)"
+            if self.play.hit{
+                self.timer.invalidate()
+                self.resetOutlet.isHidden = false
+            }
+        }
+        play.block.position = CGPoint(x: -545, y: 71)
+        play.block.physicsBody?.velocity.dx = 500.0
+        play.block.physicsBody?.affectedByGravity = true
+        play.gameOverLabel.isHidden = true
+        resetOutlet.isHidden = true
+    }
 }
