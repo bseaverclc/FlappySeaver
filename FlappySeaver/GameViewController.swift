@@ -19,6 +19,8 @@ class GameViewController: UIViewController {
     @IBOutlet weak var timerLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
+        let value = UIInterfaceOrientation.landscapeLeft.rawValue
+            UIDevice.current.setValue(value, forKey: "orientation")
         timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true){ tempTimer in
             self.time += 0.01
             self.time = round(self.time * 100.0)/100.0
@@ -62,9 +64,9 @@ class GameViewController: UIViewController {
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         if UIDevice.current.userInterfaceIdiom == .phone {
-            return .allButUpsideDown
+            return .landscapeRight
         } else {
-            return .all
+            return .landscapeRight
         }
     }
 
