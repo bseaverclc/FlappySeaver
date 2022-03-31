@@ -11,8 +11,23 @@ import GameplayKit
 
 class GameViewController: UIViewController {
 
+    @IBOutlet weak var jumpButtonOutlet: UIButton!
+    var play : GameScene!
+    var timer = Timer()
+    var time = 0.0
+    
+    @IBOutlet weak var timerLabel: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
+        timer = Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true){ tempTimer in
+            self.time += 0.01
+            self.time = round(self.time * 100.0)/100.0
+            self.timerLabel.text = "\(self.time)"
+            if self.play.hit{
+                self.timer.invalidate()
+            }
+        }
+       
         
         // Load 'GameScene.sks' as a GKScene. This provides gameplay related content
         // including entities and graphs.
@@ -20,10 +35,10 @@ class GameViewController: UIViewController {
             
             // Get the SKScene from the loaded GKScene
             if let sceneNode = scene.rootNode as! GameScene? {
-                
+                play = sceneNode
                 // Copy gameplay related content over to the scene
-                sceneNode.entities = scene.entities
-                sceneNode.graphs = scene.graphs
+               // sceneNode.entities = scene.entities
+                //sceneNode.graphs = scene.graphs
                 
                 // Set the scale mode to scale to fit the window
                 sceneNode.scaleMode = .aspectFill
@@ -56,4 +71,12 @@ class GameViewController: UIViewController {
     override var prefersStatusBarHidden: Bool {
         return true
     }
+    
+
+    
+    @IBAction func jumpButtonDownAction(_ sender: UIButton) {
+        play.block.physicsBody?.velocity.dy = CGFloat(700.0)
+    }
+    
+    
 }
